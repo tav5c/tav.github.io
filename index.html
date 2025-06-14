@@ -381,9 +381,24 @@
   }
   100% {
     opacity: 0;
-    transform: scale(0.3) translateY(30px);
-  }
-}
+    transform: scale(0.3) translateY(30px);}}.time-display {
+  margin: 15px 0;
+  padding: 15px;
+  background: rgba(255, 102, 102, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 102, 102, 0.3);
+  text-align: center;
+}.time-label {
+  color: #ffcccc;
+  font-size: 1.1em;
+  margin-bottom: 5px;
+  opacity: 0.8;}.time-value {
+  color: #ff6666;
+  font-size: 1.8em;
+  font-weight: bold;
+  text-shadow: 0 0 10px rgba(255, 102, 102, 0.5);
+  font-family: 'Courier New', monospace;}
   </style>
 </head>
 <body>
@@ -398,6 +413,10 @@
     <div class="description">Lost?</div>
     <div class="badges">
       <div class="badge">⛧</div>
+      <div class="time-display">
+        <div class="time-label">Current Time (GMT+1)</div>
+        <div class="time-value" id="currentTime">--:--:--</div>
+      </div>
     </div>    <div class="audio-player" id="audioPlayer">
       <div class="audio-content">
         <img class="song-cover" id="songCover" src="" alt="Song Cover" style="display: none;">
@@ -517,7 +536,7 @@
       document.getElementById('audioPlayer').style.display = 'none';
       document.getElementById('audioToggle').classList.add('show');
       console.log('No MP3 found, using video audio only');
-    });    // Add time update listener here
+    });
     audio.addEventListener('timeupdate', () => {
       if (!audio.duration) return;      const percent = (audio.currentTime / audio.duration) * 100;
       document.getElementById('progress').style.width = percent + "%";      const currentMins = Math.floor(audio.currentTime / 60);
@@ -647,24 +666,36 @@ let lastMouseTime = 0;function createSpark(x, y) {
   const spark = document.createElement('div');
   spark.className = 'spark';
   spark.style.left = x + 'px';
-  spark.style.top = y + 'px';  // Random slight offset for more natural look
+  spark.style.top = y + 'px'; 
   const offsetX = (Math.random() - 0.5) * 8;
   const offsetY = (Math.random() - 0.5) * 8;
-  spark.style.transform = `translate(${offsetX}px, ${offsetY}px)`;  document.body.appendChild(spark);  // Remove spark after animation
+  spark.style.transform = `translate(${offsetX}px, ${offsetY}px)`;  document.body.appendChild(spark);
   setTimeout(() => {
     if (spark.parentNode) {
       spark.parentNode.removeChild(spark);
     }
   }, 800);
-}// Mouse movement handler
+}
 document.addEventListener('mousemove', (e) => {
   mouseX = e.clientX;
-  mouseY = e.clientY;  const now = Date.now();  // Create sparks only when mouse is moving (throttled)
-  if (now - lastMouseTime > 1) { // Adjust timing as needed (lower = more sparks)
+  mouseY = e.clientY;  const now = Date.now();
+  if (now - lastMouseTime > 1) {
     createSpark(mouseX, mouseY);
     lastMouseTime = now;
   }
 });
+function updateTime() {
+  const now = new Date();
+  const gmtPlus1 = new Date(now.getTime() + (1 * 60 * 60 * 1000));
+  const hours = gmtPlus1.getUTCHours().toString().padStart(2, '0');
+  const minutes = gmtPlus1.getUTCMinutes().toString().padStart(2, '0');
+  const seconds = gmtPlus1.getUTCSeconds().toString().padStart(2, '0');
+  
+  const timeString = `${hours}:${minutes}:${seconds}`;
+  document.getElementById('currentTime').textContent = timeString;
+}
+updateTime();
+setInterval(updateTime, 1000);
 </script>
 </body>
 </html>
