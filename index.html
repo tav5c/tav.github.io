@@ -442,7 +442,6 @@
       <div class="socials">
         <a href="#" class="social-icon" id="btc" onclick="copyToClipboard('1DYvKxLXwiboFe4duCVXZEEw1PdRZroF4t', event)"></a>
         <a href="https://discord.com/users/772499734207660042" target="_blank" class="social-icon" id="discord"></a>
-        <a href="https://github.com/tav5c" target="_blank" class="social-icon" id="github"></a>
         <a href="https://instagram.com/tav5c" target="_blank" class="social-icon" id="instagram"></a>
         <a href="https://steamcommunity.com/id/tav5c" target="_blank" class="social-icon" id="steam"></a>
         <a href="https://open.spotify.com/user/31roslz3w6scshdipjvx3d7qehku?si=YF5nvFfASv-iPs4O_BwPMw" target="_blank" class="social-icon" id="spotify"></a>
@@ -474,7 +473,7 @@
       img.src = `./assets/pfp/pfp.${formats[index]}`;
     }    tryFormat(0);
   }  function loadSocialIcons() {
-    const icons = ['btc', 'discord', 'github', 'instagram', 'steam', 'spotify', 'roblox', 'eth'];
+    const icons = ['btc', 'discord', 'instagram', 'steam', 'spotify', 'roblox', 'eth'];
     const formats = ['png', 'jpg', 'jpeg', 'webp', 'svg'];    icons.forEach(iconName => {
       const element = document.getElementById(iconName);      function tryFormat(index) {
         if (index >= formats.length) {
