@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Tav</title>
   <style>
@@ -739,9 +738,11 @@ function updateActivityDisplay(userData) {
         timeDisplay.parentElement.insertAdjacentElement('afterend', activityDiv);
     }
     const isOnline = userData.discord_status !== 'offline';
-    const activity = userData.activities.find(act => act.type !== 4) || userData.activities[0];
+    // doesn't detect custom status (type 4), streaming (type 1) and watching (type 3)
+    const activity = userData.activities.find(act => act.type !== 4 && act.type !== 1 && act.type !== 3);
     if (isOnline && activity) {
         activityDiv.classList.remove('offline');
+        
         let appIconUrl = '';
         if (activity.application_id && activity.assets) {
             if (activity.assets.large_image) {
@@ -781,7 +782,16 @@ function updateActivityDisplay(userData) {
             ${timeString ? `<div class="activity-timestamp">for ${timeString}</div>` : ''}
         `;
     } else {
-        showOfflineStatus();
+        activityDiv.classList.remove('offline');
+        activityDiv.innerHTML = `
+            <div class="activity-header">
+                <div style="position: relative;">
+                    <img class="activity-pfp" src="https://cdn.discordapp.com/avatars/772499734207660042/${userData.discord_user.avatar}.png" alt="Discord Avatar">
+                    <div class="status-indicator status-${userData.discord_status}"></div>
+                </div>
+                <div class="activity-status">Currently ${getStatusText(userData.discord_status)}</div>
+            </div>
+        `;
     }
 }
 function showOfflineStatus() {
@@ -796,12 +806,11 @@ function showOfflineStatus() {
     activityDiv.innerHTML = `
         <div class="activity-header">
             <div style="position: relative;">
-                <img class="activity-pfp" src="https://cdn.discordapp.com/avatars/772499734207660042/a_default.png" alt="Discord Avatar">
+                <img class="activity-pfp" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="Discord Avatar">
                 <div class="status-indicator status-offline"></div>
             </div>
             <div class="activity-status">💤 Currently Offline</div>
         </div>
-        <div class="activity-name">No Activity</div>
     `;
 }
 function getStatusText(status) {
